@@ -1,0 +1,20 @@
+JavaScript Programming Language (1992-1993)
+    ES5 (2005) / ES6 (2015) After ES6 => Develop app in (React,Angular,Veu)
+
+        Before 2009 it was not possible (2009) => NodeJS => Javascript
+
+        Browser Applications (Flipkart, Youtube, Gmail etc)
+        Mobile Application (Uber, Zomato)
+        Desktop Application (VS Code, Miro, Postman etc)
+        Server Application
+    
+    🏁 By using script element
+    🏁 By using script file
+
+        🥇 Popup in JS
+
+
+    👍 Runs on interpreter 
+        => runtime compilation with execution (JS, PHP ,PY)
+    👍 Compiler 
+        => Check ==> 👍 (byte file created) ==> run code  (C , C++ etc)
