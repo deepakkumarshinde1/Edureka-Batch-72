@@ -18,3 +18,27 @@ JavaScript Programming Language (1992-1993)
         => runtime compilation with execution (JS, PHP ,PY)
     👍 Compiler 
         => Check ==> 👍 (byte file created) ==> run code  (C , C++ etc)
+
+    Variables
+    Operators
+    Statements
+    Functions
+    Array
+    Array Methods
+    Objects Methods
+    Math Methods
+    Dates Methods
+    DOM
+    Events
+    ES6
+
+    DOM 
+        => Document Object Model
+        => Logical Representation of you HTML Code
+        => DOM algorithm (create a DOM tree from html code)
+        => document (javascript)
+                getElementById()
+                getElementsByClassName()
+                getElementsByTagName()
+                querySelector()
+                querySelectorAll();
