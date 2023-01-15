@@ -1,23 +1,18 @@
-/*** var , let , const
- * let keyword allows initialization only once.
- * let keyword is a block scope
- * var keyword is function scope
- * const keyword allows only once initialization and value assign
+// javascript run on one thread => main thread
+// by default sync
+// What is sync => blocking
+// What is async => Non Blocking
+// From sync to async => Event Loop API (object, function)
+// Event Loop (Event Queue)
+/**
+ * DOM , setInterval, setTimeOut, promises, async await , xhr , fetch
  */
+console.log("log-1");
 
-let text = "edureka"; // global
-
-const pie = 3.14;
-
-text = "this is es6";
-console.log(text);
-
-function abc() {
-  let a = "abc";
-  for (let i = 1; i < 2; i++) {
-    console.log(i);
-  } // for is close
-  console.log(i); // 1,2,null, undefined,error
+for (let index = 0; index < 3000; index++) {
+  console.log("log-2");
 }
 
-// abc();
+console.log("log-3");
+
+// still js js once fastest prog lag world ==> Event Loop

@@ -1,0 +1,62 @@
+Javascript
+and 
+JAVA, PYTHON, PHP , C#
+
+JAVA Code (JAVA Setup) => Server Apache, Nginx
+PYTHON (Setup) => Server Apache, Nginx
+PHP (Setup) => Server Apache, Nginx
+
+
+Node JS 
+     Runtime Environment For JS
+     If want a js code without a browser
+     act as a server for javascript
+     V8
+     Node JS , Chrome, V8 => google
+     Documents & Window Object not available in Node JS
+     We can't DOM for operation with js
+     Node JS is async in nature
+     Node JS Works on Event driven and Non-Blocking I/O
+     Node JS works on single thread (main-thread) => one core is use of processor
+     Mutil instance of node app => PM2
+
+
+# Modules => collection of a function or object or classes
+# handel files we use fs modules
+    blocking and non-blocking
+    create file
+    update file
+    read file 
+    delete file
+
+
+
+
+Javascript(Node JS) => Node JS
+
+    Node JS Setup
+    basic js program
+    Node JS Module
+        Native
+            Create server With JS
+            handel a files with js
+        Custom Module
+        3rd party module
+            NPM commands
+            Express
+                Create a server
+                Routing
+                API
+                Test API POSTMAN APP
+                MVC
+            Zomato APP
+                Test API fake i.e dummy data
+            MongoDB
+                Basic Command Of MongoDB
+                MongoDb AtLAS
+            .ENV
+            Zomato + MongoDB
+                real api
+    React JS
+             
+
