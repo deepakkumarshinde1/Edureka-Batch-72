@@ -1,0 +1,29 @@
+3rd party Module (package)
+    Developer => Use it 
+    React JS
+    Express  JS
+    Angular
+
+NPM => Node Package Manager
+npm command 
+    install , remove that package, update
+npm init
+
+node_modules => folder store all downloadable packages
+
+configuration for project (package.json) meta project file
+
+metadata => data about data
+
+
+Express => totally dependant 
+
+package => 2nd package => 3rd package
+
+ExpressJS => Backend Framework
+    # Backend Framework  We Can Use It for server development
+    # it has a MVC architecture
+    # inbuilt routing
+    # it comes with inbuilt debugger
+    # many lib are integrated express js
+
