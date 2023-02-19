@@ -221,7 +221,11 @@ const SearchPage = () => {
             <div className="col-12 col-lg-8 col-md-7">
               {restList.map((restaurant, index) => {
                 return (
-                  <div key={index} className="col-12 food-shadow p-4 mb-4">
+                  <div
+                    onClick={() => navigate("/restaurant/" + restaurant._id)}
+                    key={index}
+                    className="col-12 food-shadow p-4 mb-4"
+                  >
                     <div className="d-flex align-items-center">
                       <img src="/images/food-item.png" className="food-item" />
                       <div className="ms-5">

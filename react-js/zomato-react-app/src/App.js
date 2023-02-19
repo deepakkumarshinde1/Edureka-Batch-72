@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
+import Restaurant from "./components/Restaurant";
 import SearchPage from "./components/SearchPage";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/search/:id" element={<SearchPage />} />
+        <Route path="/restaurant/:id" element={<Restaurant />} />
       </Routes>
     </>
   );
