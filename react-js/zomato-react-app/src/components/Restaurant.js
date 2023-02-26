@@ -2,12 +2,19 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "./base_url";
+import Header from "./Header";
 
 const Restaurant = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // {id:1}
   let [toggle, setToggle] = useState(true);
   let [totalPrice, setTotalPrice] = useState(0);
+  let [orderUser, setOrderUser] = useState({
+    username: "Deepakkumar",
+    email: "deepkak@gmail.com",
+    address: "Nashik",
+    mobile: "9876543234",
+  });
   let initRestaurant = {
     _id: 0,
     name: "",
@@ -70,14 +77,161 @@ const Restaurant = () => {
     getRestaurantDetails();
     getMenuItemsList();
   }, []);
+
+  let loadScript = async () => {
+    let script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    document.body.appendChild(script);
+    return true;
+  };
+  let makePayment = async () => {
+    //  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    // await loadScript();
+    try {
+      let { data } = await axios.post(BASE_URL + "create-order", {
+        amount: totalPrice,
+      });
+      let { order } = data;
+
+      var options = {
+        key: "rzp_test_RB0WElnRLezVJ5", // Enter the Key ID generated from the Dashboard
+        amount: order.amount, // Amount is in paise
+        currency: order.currency,
+        name: "Zomato Clone",
+        description: "Online Payment",
+        image:
+          "https://upload.wikimedia.org/wikipedia/commons/7/75/Zomato_logo.png",
+        order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: async (response) => {
+          let { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+            response;
+          // alert(response.razorpay_payment_id); // payment_id
+          // alert(response.razorpay_order_id); // order_id
+          // alert(response.razorpay_signature); // signature === Alg(payment_id + order_id + sec_key)
+
+          let userOrders = restaurantMenu.filter((menu) => {
+            return menu.qty > 0;
+          });
+          let sendData = {
+            payment_id: razorpay_payment_id,
+            order_id: razorpay_order_id,
+            signature: razorpay_signature,
+            order_list: userOrders,
+            total: totalPrice,
+            user_email: orderUser.email,
+            mobile: orderUser.mobile,
+            username: orderUser.username,
+            address: orderUser.address,
+          };
+          let { data } = await axios.post(
+            BASE_URL + "verify-payment",
+            sendData
+          );
+          console.log(data);
+          if (data.status === true) {
+            alert("Payment done successfully");
+            window.location.assign("/");
+          } else {
+            alert("Payment Fail, Try Again");
+          }
+        },
+        prefill: {
+          name: orderUser.username,
+          email: orderUser.email,
+          contact: orderUser.mobile,
+        },
+      };
+      try {
+        var rzp1 = new window.Razorpay(options);
+        rzp1.open();
+      } catch (error) {
+        alert("Unable to load try again");
+      }
+    } catch (error) {
+      alert("Server error");
+      console.log(error);
+    }
+  };
   return (
     <>
+      <div
+        className="modal fade"
+        id="modalAccountId"
+        aria-hidden="true"
+        aria-labelledby="exampleModalToggleLabel2"
+        tabIndex="-1"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content p-3">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalToggleLabel2">
+                User Details
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <div className="mb-3">
+                <label htmlFor="user-name" className="form-label">
+                  User Name
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  aria-describedby="emailHelp"
+                  value={orderUser.username}
+                  onChange={() => {}}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  aria-describedby="emailHelp"
+                  value={orderUser.email}
+                  onChange={() => {}}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="" className="form-label">
+                  Address
+                </label>
+                <textarea
+                  type="password"
+                  className="form-control"
+                  value={orderUser.address}
+                  onChange={() => {}}
+                ></textarea>
+              </div>
+            </div>
+            <div className="d-flex justify-content-between">
+              <button
+                className="btn btn-primary"
+                data-bs-target="#restMenuModal"
+                data-bs-toggle="modal"
+              >
+                Back To Menu
+              </button>
+              <button className="btn btn-success" onClick={makePayment}>
+                Pay Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div
         className="modal fade"
         id="restMenuModal"
         data-bs-backdrop="static"
         data-bs-keyboard="false"
-        tabindex="-1"
+        tabIndex="-2"
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
       >
@@ -97,7 +251,7 @@ const Restaurant = () => {
             <div className="modal-body">
               {restaurantMenu.map((menuItem, index) => {
                 return (
-                  <div className="row p-2">
+                  <div className="row p-2" key={index}>
                     <div className="col-8">
                       <p className="mb-1 h6">{menuItem.name}</p>
                       <p className="mb-1"> ₹ {menuItem.price} Only</p>
@@ -141,7 +295,13 @@ const Restaurant = () => {
             <div className="modal-footer d-flex justify-content-between p-3 pt-0">
               <h3>Total: {totalPrice}</h3>
               {totalPrice > 0 ? (
-                <button className="btn btn-success">Process</button>
+                <button
+                  className="btn btn-success"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalAccountId"
+                >
+                  Process
+                </button>
               ) : null}
             </div>
           </div>
@@ -149,18 +309,7 @@ const Restaurant = () => {
       </div>
       <main className="container-fluid">
         <div className="row bg-danger justify-content-center">
-          <div className="col-10 d-flex justify-content-between py-2">
-            <p className="m-0 brand" onClick={() => navigate("/")}>
-              e!
-            </p>
-            <div>
-              <button className="btn text-white">Login</button>
-              <button className="btn btn-outline-light">
-                <i className="fa fa-search" aria-hidden="true"></i>Create a
-                Account
-              </button>
-            </div>
-          </div>
+          <Header />
         </div>
 
         {/* <!-- section -->  */}

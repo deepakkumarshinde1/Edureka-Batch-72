@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "./base_url";
+import Header from "./Header";
 
 let Home = () => {
   const navigate = useNavigate();
@@ -36,15 +37,8 @@ let Home = () => {
   return (
     <>
       <main className="container-fluid">
-        <section className="row main-section align-content-start">
-          <header className="col-12 py-3">
-            <div className="container d-lg-flex justify-content-end d-none">
-              <button className="btn text-white me-3">Login</button>
-              <button className="btn text-white border border-white">
-                Create an account
-              </button>
-            </div>
-          </header>
+        <section className="row main-section align-content-start justify-content-center">
+          <Header />
 
           <section className="col-12 d-flex flex-column align-items-center justify-content-center">
             <p className="brand-name fw-bold my-lg-2 mb-0">e!</p>

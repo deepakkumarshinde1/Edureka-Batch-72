@@ -9,6 +9,8 @@ const OrderSchema = new mongoose.Schema(
     order_id: { type: String, require: true },
     payment_id: { type: String, require: true },
     order_status: { type: Boolean, require: true },
+    username: { type: String, require: true },
+    address: { type: String, require: true },
   },
   {
     versionKey: false,

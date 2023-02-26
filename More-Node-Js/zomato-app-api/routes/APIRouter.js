@@ -31,7 +31,9 @@ APIRouter.get(
 
 APIRouter.post("/filter", restaurant.filter);
 
-APIRouter.post("/payment", payment.saveOrder);
+// APIRouter.post("/payment", payment.saveOrder);
+APIRouter.post("/create-order", payment.createOrder);
+APIRouter.post("/verify-payment", payment.verify);
 module.exports = APIRouter;
 
 // order ===> server (save)
