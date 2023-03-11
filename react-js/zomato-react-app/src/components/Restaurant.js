@@ -1,20 +1,34 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { BASE_URL } from "./base_url";
+import { BASE_URL, checkLogin } from "./base_url";
 import Header from "./Header";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
 
 const Restaurant = () => {
   const navigate = useNavigate();
+  let [isLogin, setIsLogin] = useState(checkLogin());
   const { id } = useParams(); // {id:1}
   let [toggle, setToggle] = useState(true);
   let [totalPrice, setTotalPrice] = useState(0);
   let [orderUser, setOrderUser] = useState({
-    username: "Deepakkumar",
-    email: "deepkak@gmail.com",
-    address: "Nashik",
-    mobile: "9876543234",
+    username: "",
+    email: "",
+    address: "",
+    mobile: "",
   });
+
+  useEffect(() => {
+    if (isLogin) {
+      setOrderUser({
+        username: isLogin.name,
+        email: isLogin.email,
+        mobile: "",
+        address: "",
+      });
+    }
+  }, [isLogin]);
   let initRestaurant = {
     _id: 0,
     name: "",
@@ -152,8 +166,47 @@ const Restaurant = () => {
       console.log(error);
     }
   };
+
+  let inputChange = (event) => {
+    console.log(event);
+    let { value, name } = event.target; // value => user input
+    orderUser[name] = value;
+    setOrderUser({ ...orderUser });
+  };
   return (
     <>
+      <div
+        className="modal fade"
+        id="galleryModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-lg">
+          <div className="modal-content">
+            <div className="modal-body">
+              <Carousel
+                infiniteLoop={true}
+                showThumbs={false}
+                interval={2000}
+                autoPlay={true}
+              >
+                {restaurantDetails.thumb.map((value, index) => {
+                  return (
+                    <div key={index}>
+                      <img
+                        src={"/images/" + value}
+                        class="d-block w-100"
+                        alt="..."
+                      />
+                    </div>
+                  );
+                })}
+              </Carousel>
+            </div>
+          </div>
+        </div>
+      </div>
       <div
         className="modal fade"
         id="modalAccountId"
@@ -185,6 +238,7 @@ const Restaurant = () => {
                   aria-describedby="emailHelp"
                   value={orderUser.username}
                   onChange={() => {}}
+                  disabled
                 />
               </div>
               <div className="mb-3">
@@ -197,6 +251,20 @@ const Restaurant = () => {
                   aria-describedby="emailHelp"
                   value={orderUser.email}
                   onChange={() => {}}
+                  disabled
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="" className="form-label">
+                  Mobile
+                </label>
+                <input
+                  type="email"
+                  className="form-control"
+                  aria-describedby="emailHelp"
+                  value={orderUser.mobile}
+                  name="mobile"
+                  onChange={inputChange}
                 />
               </div>
               <div className="mb-3">
@@ -207,7 +275,8 @@ const Restaurant = () => {
                   type="password"
                   className="form-control"
                   value={orderUser.address}
-                  onChange={() => {}}
+                  name="address"
+                  onChange={inputChange}
                 ></textarea>
               </div>
             </div>
@@ -326,7 +395,7 @@ const Restaurant = () => {
                   <button
                     className="btn btn-outline-light position-absolute btn-gallery"
                     data-bs-toggle="modal"
-                    data-bs-target="#slideShow"
+                    data-bs-target="#galleryModal"
                   >
                     Click To Get Image Gallery
                   </button>
@@ -353,14 +422,23 @@ const Restaurant = () => {
                       Contact
                     </li>
                   </ul>
-                  <button
-                    className="btn btn-danger align-self-start"
-                    data-bs-toggle="modal"
-                    data-bs-target="#restMenuModal"
-                    role="button"
-                  >
-                    Place Online Order
-                  </button>
+                  {isLogin ? (
+                    <button
+                      className="btn btn-success align-self-start"
+                      data-bs-toggle="modal"
+                      data-bs-target="#restMenuModal"
+                      role="button"
+                    >
+                      Place Online Order
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-danger align-self-start"
+                      role="button"
+                    >
+                      Please Login
+                    </button>
+                  )}
                 </div>
                 <hr className="mt-0" />
 

@@ -1,27 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import jwtDecode from "jwt-decode";
+
 import { useState } from "react";
+import { checkLogin } from "./base_url";
 
 let Header = () => {
   const navigate = useNavigate();
-  let checkLogin = (response) => {
-    // get token
-    let token = localStorage.getItem("auth_token");
 
-    if (token) {
-      // decode token
-      // return token
-      // return null
-      try {
-        return jwtDecode(token);
-      } catch (error) {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  };
   let [isLogin, setIsLogin] = useState(checkLogin());
 
   let success = (credentialResponse) => {
@@ -41,6 +26,11 @@ let Header = () => {
 
   let error = () => {
     console.log("Login Failed");
+  };
+
+  let logout = () => {
+    localStorage.removeItem("auth_token");
+    window.location.assign("/");
   };
   return (
     <>
@@ -82,7 +72,9 @@ let Header = () => {
               <span className="mx-3 text-white">
                 Welcome {isLogin.given_name}
               </span>
-              <button className="btn btn-sm btn-danger">Logout</button>
+              <button className="btn btn-sm btn-danger" onClick={logout}>
+                Logout
+              </button>
             </>
           ) : (
             <>
