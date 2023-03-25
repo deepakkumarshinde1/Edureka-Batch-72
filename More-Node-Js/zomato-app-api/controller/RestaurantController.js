@@ -68,25 +68,38 @@ module.exports.getMenuItemsByRestaurant = async (request, response) => {
 };
 
 module.exports.filter = async (request, response) => {
-  let { meal_type, location, cuisines, sort } = request.body;
+  let { meal_type, location, cuisines, sort, page, lcost, hcost } =
+    request.body;
   if (sort === undefined) {
     sort = 1;
   }
   // 1 = asc , -1 = desc
+  page = page ? page : 1;
+  let perPage = 2;
+  let startIndex = page * perPage - perPage;
+  let endIndex = page * perPage;
+
   let filterRecord = {};
 
   if (meal_type !== undefined) filterRecord["mealtype_id"] = meal_type;
   if (location !== undefined) filterRecord["location_id"] = location;
   if (cuisines !== undefined) filterRecord["cuisine_id"] = { $in: cuisines };
+  if (lcost !== undefined && hcost !== undefined)
+    filterRecord["min_price"] = { $gte: lcost, $lte: hcost };
 
-  console.log(filterRecord);
   try {
     let result = await RestaurantModel.find(filterRecord).sort({
       min_price: sort,
     });
+
+    let pageCount = Math.round(result.length / perPage);
+
+    result = result.slice(startIndex, endIndex);
     response.status(200).send({
       status: true,
       result,
+      pageCount,
+      page,
     });
   } catch (error) {
     console.log(error);

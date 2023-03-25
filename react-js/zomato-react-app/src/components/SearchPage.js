@@ -6,7 +6,7 @@ import Header from "./Header";
 
 const SearchPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // {id:1}
+  const { id, type } = useParams(); // {id:1}
   let [filter, setFilter] = useState({
     meal_type: id,
     page: 1,
@@ -14,7 +14,9 @@ const SearchPage = () => {
 
   let [restList, setRestList] = useState([]);
   let [locationList, setLocationList] = useState([]);
-
+  let [city, setCity] = useState("Near By");
+  let [pageCount, setPageCount] = useState(0);
+  let [page, setPage] = useState(1);
   let getLocationList = async () => {
     let url = `${BASE_URL}get-location-list`;
     let { data } = await axios.get(url);
@@ -30,15 +32,22 @@ const SearchPage = () => {
     console.log(data);
     if (data.status === true) {
       setRestList([...data.result]);
+      setPageCount(data.pageCount);
+      setPage(data.page - 1);
     } else {
       setRestList([]);
+      setPageCount(0);
+      setPage(0);
     }
   };
 
-  let setFilterLogic = (event, type) => {
+  let setFilterLogic = (event, type, page = 0) => {
     let { value } = event.target;
     console.log(value);
     switch (type) {
+      case "page":
+        setFilter({ ...filter, page: page });
+        break;
       case "sort":
         setFilter({ ...filter, sort: value });
         break;
@@ -58,6 +67,18 @@ const SearchPage = () => {
   }, []);
   useEffect(() => {
     getFilterData();
+    if (filter.location) {
+      let location = locationList.find((value) => {
+        return Number(filter.location) === Number(value.location_id);
+      });
+      if (location) {
+        setCity(location.name + "," + location.city);
+      } else {
+        setCity("Near By");
+      }
+    } else {
+      setCity("Near By");
+    }
   }, [filter]);
   return (
     <>
@@ -68,7 +89,9 @@ const SearchPage = () => {
         {/* <!-- section --> */}
         <div className="row">
           <div className="col-12 px-5 pt-4">
-            <p className="h3">Breakfast Places In Mumbai</p>
+            <p className="h3">
+              {type} Places In {city}
+            </p>
           </div>
           {/* <!-- food item --> */}
           <div className="col-12 d-flex flex-wrap px-lg-5 px-md-5 pt-4">
@@ -258,12 +281,29 @@ const SearchPage = () => {
 
               <div className="col-12 pagination d-flex justify-content-center">
                 <ul className="pages">
-                  <li>&lt;</li>
+                  {Array.from(Array(pageCount).keys()).map((value, index) => {
+                    return (
+                      <li
+                        key={index}
+                        className={page === index ? "active" : ""}
+                        onClick={() =>
+                          setFilterLogic(
+                            { target: { value: 0 } },
+                            "page",
+                            index + 1
+                          )
+                        }
+                      >
+                        {value + 1}
+                      </li>
+                    );
+                  })}
+                  {/* <li>&lt;</li>
                   <li className="active">1</li>
-                  <li>2</li>
+                  
                   <li>3</li>
                   <li>4</li>
-                  <li>&gt;</li>
+                  <li>&gt;</li> */}
                 </ul>
               </div>
             </div>

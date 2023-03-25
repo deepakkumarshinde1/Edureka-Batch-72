@@ -83,7 +83,9 @@ let Home = () => {
                       key={index}
                       className="px-0 d-flex border border-1 quick-search-item"
                       onClick={() => {
-                        navigate("/search/" + mealType.meal_type);
+                        navigate(
+                          "/search/" + mealType.meal_type + "/" + mealType.name
+                        );
                       }}
                     >
                       <img
